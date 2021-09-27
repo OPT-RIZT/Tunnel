@@ -7,10 +7,7 @@ class gpio():
     pin1 = 17
     pin2 = 18
     IO_Signal = pyqtSignal()
-    def __init__(self):
-        gpio.setmode(gpio.BCM)
-        gpio.setup(self.pin1, gpio.OUT)
-        gpio.setup(self.pin2, gpio.IN)
+
 
     def set_pin1_high(self):
         gpio.output(self.pin1 , gpio.HIGH)
