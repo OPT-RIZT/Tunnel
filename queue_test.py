@@ -14,3 +14,5 @@ print(order_list.queue)
 
 if order_list.queue[3][5:10] == '50003':
     print(34)
+print(order_list.get())
+print(order_list.queue)

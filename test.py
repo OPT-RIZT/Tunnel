@@ -12,7 +12,7 @@ from queue import Queue,LifoQueue,PriorityQueue
 from Point_trans import *
 
 
-order_dict = {'测量':'%R1Q,50013:2' , '旋转':'%R1Q,50003:0,0,0,0,0,0,0' , '搜索':'%R1Q,9029:0.2618,0.2618,0','查询':'%R1Q,2003:0','旋转1':'%R1Q,50003:0.035,-0.032,0,0,0,0,0' ,'旋转2':'%R1Q,50003:0.042,-0.015,0,0,0,0,0' ,'旋转3':'%R1Q,50003:-0.078,0.06,0,0,0,0,0' }
+order_dict = {'测量':'%R1Q,50013:2' , '旋转':'%R1Q,50003:0,0,0,0,0,0,0' , '搜索':'%R1Q,9029:0.2618,0.2618,0','查询':'%R1Q,2003:0','旋转1':'%R1Q,50003:0.035,-0.032,0,0,0,0,0 ' ,'旋转2':'%R1Q,50003:0.042,-0.015,0,0,0,0,0' ,'旋转3':'%R1Q,50003:-0.078,0.06,0,0,0,0,0' }
 order_list = Queue(maxsize=18)
 class MyMainWindow(QMainWindow , Ui_MainWindow , QObject):
     def __init__(self ):
@@ -22,17 +22,17 @@ class MyMainWindow(QMainWindow , Ui_MainWindow , QObject):
         self.readflag = False
         self.pushButton.clicked.connect(self.stop)
         self.station_single.connect(self.deal)
-        order_list.put(order_dict['查询'])
-        order_list.put(order_dict['搜索'])
-        order_list.put(order_dict['测量'])
+        #order_list.put(order_dict['查询'])
+        #order_list.put(order_dict['搜索'])
+        #order_list.put(order_dict['测量'])
         order_list.put(order_dict['旋转1'])
-        order_list.put(order_dict['查询'])
-        order_list.put(order_dict['搜索'])
-        order_list.put(order_dict['测量'])
+        #order_list.put(order_dict['查询'])
+        #order_list.put(order_dict['搜索'])
+        #order_list.put(order_dict['测量'])
         order_list.put(order_dict['旋转2'])
         order_list.put(order_dict['查询'])
-        order_list.put(order_dict['搜索'])
-        order_list.put(order_dict['测量'])
+        #order_list.put(order_dict['搜索'])
+        #order_list.put(order_dict['测量'])
         order_list.put(order_dict['旋转3'])
         self.init()
 
@@ -41,17 +41,17 @@ class MyMainWindow(QMainWindow , Ui_MainWindow , QObject):
         order_list.put('stop')
     station_single = pyqtSignal(str)
     def ini_order(self):
-        order_list.put(order_dict['查询'])
-        order_list.put(order_dict['搜索'])
-        order_list.put(order_dict['测量'])
+        #order_list.put(order_dict['查询'])
+        #order_list.put(order_dict['搜索'])
+        #order_list.put(order_dict['测量'])
         order_list.put(order_dict['旋转1'])
-        order_list.put(order_dict['查询'])
-        order_list.put(order_dict['搜索'])
-        order_list.put(order_dict['测量'])
+        #order_list.put(order_dict['查询'])
+        #order_list.put(order_dict['搜索'])
+        #order_list.put(order_dict['测量'])
         order_list.put(order_dict['旋转2'])
-        order_list.put(order_dict['查询'])
-        order_list.put(order_dict['搜索'])
-        order_list.put(order_dict['测量'])
+        #order_list.put(order_dict['查询'])
+        #order_list.put(order_dict['搜索'])
+        #order_list.put(order_dict['测量'])
         order_list.put(order_dict['旋转3'])
         self.send_ord(order_list.queue[0])
     def send(self):
@@ -87,8 +87,8 @@ class MyMainWindow(QMainWindow , Ui_MainWindow , QObject):
                 try:
                     # data = self.open_com.read_all().decode("utf-8")
                     data = self.com.readline().decode("utf-8")
-                    #print("接受：{}".format(data))
-                    if len(data) > 8:
+                    print("接受：{}".format(data))
+                    if len(data) > 5:
                         # print(data.length)
                         self.station_single.emit(str(data))
                 except Exception as e:
@@ -101,11 +101,11 @@ class MyMainWindow(QMainWindow , Ui_MainWindow , QObject):
             #根据队列命令执行相应分支动作，执行完成删除队列顶部命令，发送队列中下一条命令
             if order_list.queue[0] == order_dict['测量']:
                 #返回向量写入txt
-                point11 = ca.get_angle_from_com_response(text)
-                with open("vector.txt", 'a') as fs:
-                    fs.write('(' + point11[0]+ ',' )
-                    fs.write(point11[1] + ',')
-                    fs.write(point11[2] + ')')
+                # point11 = ca.get_angle_from_com_response(text)
+                # with open("vector.txt", 'a') as fs:
+                #     fs.write('(' + point11[0]+ ',' )
+                #     fs.write(point11[1] + ',')
+                #     fs.write(point11[2] + ')')
 
                 print('测量完成')
             if order_list.queue[0] == order_dict['搜索']:
@@ -119,6 +119,9 @@ class MyMainWindow(QMainWindow , Ui_MainWindow , QObject):
                 #print(text[54:63])
                 self.lineEdit.setText("角向量：{},x轴倾角：{},y轴倾角：{}".format(text[9:26] , text[44:53] , text[54:63]))
                 print("查询完成")
+                print(order_list.queue)
+                #根据倾角转回起始点（生成命令）
+
             #旋转不是固定命令，提取命令前几个字符用于判断
             if order_list.queue[0][5:10] == '50003':
                 sdas = 0

@@ -23,6 +23,8 @@ class ini_operate:
             config = ConfigObj()
             config.filename = self.file_path
             config['create_time'] = datetime.datetime.now()
+            config['基准点1'] = '1,2,3'
+            config['基准点2'] = '1,2,3'
             config.write()
 
     #贴片时的温度，气压，全站仪高度等数据
